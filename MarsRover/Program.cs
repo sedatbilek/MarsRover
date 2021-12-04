@@ -38,12 +38,12 @@ namespace MarsRover
                             rover = roverList[i];
                             helper.CalculatePosition(rover.Heading, instructionList[i], ref rover);
                             string check = ConfigurationManager.AppSettings["EndlessLoop"];
-                            
-                            if(check == "true")
+
+                            if (check == "true")
                                 helper.CalculateEndlessPlateau(ref rover, ref plateau);
-                            if ((rover.PositionX > plateau.Right || rover.PositionY > plateau.Up || rover.PositionX < 0 || rover.PositionY < 0) && check =="false")
+                            if ((rover.PositionX > plateau.Right || rover.PositionY > plateau.Up || rover.PositionX < 0 || rover.PositionY < 0) && check == "false")
                             {
-                                Console.WriteLine("UZAY BOŞLUĞU, Girilen talimatlar '("+ instructionList[i] + "') sonrası rover mars dışına çıktı.");
+                                Console.WriteLine("UZAY BOŞLUĞU, Girilen talimatlar '(" + instructionList[i] + "') sonrası rover mars dışına çıktı. Hesaplanan koordinatlar (" + rover.PositionX + ", " + rover.PositionY + ")");
                             }
                             else
                             {
