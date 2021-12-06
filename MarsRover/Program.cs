@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MarsRover.Implemantations;
+using MarsRover.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 
@@ -6,13 +8,15 @@ namespace MarsRover
 {
     class Program
     {
-        static Plateau plateau = new Plateau();
         static void Main(string[] args)
         {
+            Plateau plateau = new Plateau();
             Helper helper = new Helper();
             List<Rover> roverList = new List<Rover>();
             List<string> instructionList = new List<string>();
-
+            IRoverOrganizer roverOrganizer = new RoverOrganizer();
+            IPlateauOrganizer plateauOrganizer = new PlateauOrganizer();
+            IInstructionOrganizer instructionOrganizer = new InstructionOrganizer();
             while (true)
             {
                 ConfigurationManager.RefreshSection("appSettings");
@@ -20,7 +24,7 @@ namespace MarsRover
                 roverList.Clear();
                 instructionList.Clear();
                 var input = Console.ReadLine();
-                ReturnValue rv = helper.GetPlateauCoordinateAndValidate(input, ref plateau);
+                ReturnValue rv = plateauOrganizer.GetPlateauCoordinateAndValidate(input, ref plateau);
 
                 if (!rv.Value)
                     Console.WriteLine(rv.Message);
@@ -40,7 +44,7 @@ namespace MarsRover
                             string check = ConfigurationManager.AppSettings["EndlessLoop"];
 
                             if (check == "true")
-                                helper.CalculateEndlessPlateau(ref rover, ref plateau);
+                                plateauOrganizer.CalculateEndlessPlateau(ref rover, ref plateau);
                             if ((rover.PositionX > plateau.Right || rover.PositionY > plateau.Up || rover.PositionX < 0 || rover.PositionY < 0) && check == "false")
                             {
                                 Console.WriteLine("UZAY BOŞLUĞU, Girilen talimatlar '(" + instructionList[i] + "') sonrası rover mars dışına çıktı. Hesaplanan koordinatlar (" + rover.PositionX + ", " + rover.PositionY + ")");
@@ -54,11 +58,11 @@ namespace MarsRover
                     }
                     else
                     {
-                        rv = helper.ValidateRoverInformation(input, ref rover);
-                        helper.DisplayErrorMessageOrAddInputToList(rv, "r", ref roverList, rover, ref instructionList, null);
+                        rv = roverOrganizer.ValidateRoverInformation(input, ref rover);
+                        helper.DisplayErrorMessageOrAddInputToList(rv, InputType.Rover, ref roverList, rover, ref instructionList, null);
                         if (!rv.Value)
                             break;
-                        rv = helper.CheckRoverInformationOnPlateau(rover, plateau);
+                        rv = roverOrganizer.CheckRoverInformationOnPlateau(rover, plateau);
 
                         if (!rv.Value)
                         {
@@ -66,13 +70,19 @@ namespace MarsRover
                         }
 
                         instructions = Console.ReadLine().Trim();
-                        rv = helper.CheckInstructions(instructions);
-                        helper.DisplayErrorMessageOrAddInputToList(rv, "i", ref roverList, null, ref instructionList, instructions);
+                        rv = instructionOrganizer.CheckInstructions(instructions);
+                        helper.DisplayErrorMessageOrAddInputToList(rv, InputType.Instruction, ref roverList, null, ref instructionList, instructions);
                         if (!rv.Value)
                             break;
                     }
                 }
             }
         }
+    }
+
+    public enum InputType
+    {
+        Rover,
+        Instruction
     }
 }
