@@ -6,7 +6,7 @@ namespace MarsRover.Interfaces
 {
     interface IPlateauOrganizer
     {
-        ReturnValue GetPlateauCoordinateAndValidate(string upRight, ref Plateau plateau);
+        ReturnValue GetPlateauCoordinate(string upRight, ref Plateau plateau);
         void CalculateEndlessPlateau(ref Rover rover, ref Plateau plateau);
     }
 }

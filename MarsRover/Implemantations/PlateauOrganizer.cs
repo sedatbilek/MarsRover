@@ -7,7 +7,7 @@ namespace MarsRover.Implemantations
 {
     public class PlateauOrganizer : IPlateauOrganizer
     {
-        public ReturnValue GetPlateauCoordinateAndValidate(string upRight, ref Plateau plateau)
+        public ReturnValue GetPlateauCoordinate(string upRight, ref Plateau plateau)
         {
             ReturnValue rv = new ReturnValue();
 

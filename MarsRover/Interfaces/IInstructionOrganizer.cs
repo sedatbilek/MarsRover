@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarsRover.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,6 @@ namespace MarsRover.Interfaces
 {
     interface IInstructionOrganizer
     {
-        ReturnValue CheckInstructions(string instructions);
+        ReturnValue CheckInstructions(Instruction instructions);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MarsRover.Implemantations;
 using MarsRover.Interfaces;
+using MarsRover.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,7 +12,7 @@ namespace MarsRover
         static void Main(string[] args)
         {
             Plateau plateau = new Plateau();
-            Helper helper = new Helper();
+            Calculator calculator = new Calculator();
             List<Rover> roverList = new List<Rover>();
             List<string> instructionList = new List<string>();
             IRoverOrganizer roverOrganizer = new RoverOrganizer();
@@ -24,7 +25,7 @@ namespace MarsRover
                 roverList.Clear();
                 instructionList.Clear();
                 var input = Console.ReadLine();
-                ReturnValue rv = plateauOrganizer.GetPlateauCoordinateAndValidate(input, ref plateau);
+                ReturnValue rv = plateauOrganizer.GetPlateauCoordinate(input, ref plateau);
 
                 if (!rv.Value)
                     Console.WriteLine(rv.Message);
@@ -33,14 +34,14 @@ namespace MarsRover
                 {
                     input = Console.ReadLine();
                     Rover rover = new Rover();
-                    string instructions;
+                    Instruction instructions = new Instruction();
 
                     if (input == "*")
                     {
                         for (int i = 0; i < roverList.Count; i++)
                         {
                             rover = roverList[i];
-                            helper.CalculatePosition(rover.Heading, instructionList[i], ref rover);
+                            calculator.CalculatePosition(rover.Heading, instructionList[i], ref rover);
                             string check = ConfigurationManager.AppSettings["EndlessLoop"];
 
                             if (check == "true")
@@ -59,7 +60,7 @@ namespace MarsRover
                     else
                     {
                         rv = roverOrganizer.ValidateRoverInformation(input, ref rover);
-                        helper.DisplayErrorMessageOrAddInputToList(rv, InputType.Rover, ref roverList, rover, ref instructionList, null);
+                        calculator.AddInputToList(rv, InputType.Rover, ref roverList, rover, ref instructionList, null);
                         if (!rv.Value)
                             break;
                         rv = roverOrganizer.CheckRoverInformationOnPlateau(rover, plateau);
@@ -69,9 +70,9 @@ namespace MarsRover
                             Console.WriteLine(rv.Message);
                         }
 
-                        instructions = Console.ReadLine().Trim();
+                        instructions.Value = Console.ReadLine().Trim();
                         rv = instructionOrganizer.CheckInstructions(instructions);
-                        helper.DisplayErrorMessageOrAddInputToList(rv, InputType.Instruction, ref roverList, null, ref instructionList, instructions);
+                        calculator.AddInputToList(rv, InputType.Instruction, ref roverList, null, ref instructionList, instructions);
                         if (!rv.Value)
                             break;
                     }

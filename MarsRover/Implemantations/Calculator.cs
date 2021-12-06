@@ -1,15 +1,16 @@
 ﻿using MarsRover.Implemantations;
 using MarsRover.Interfaces;
+using MarsRover.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MarsRover
 {
-    public class Helper
+    public class Calculator : ICalculator
     {
         IHeadingOrganizer headingOrganizer;
-        public Helper()
+        public Calculator()
         {
             headingOrganizer = new HeadingOrganizer();
         }
@@ -23,7 +24,7 @@ namespace MarsRover
             }
         }
 
-        public void DisplayErrorMessageOrAddInputToList(ReturnValue rv, InputType inputType, ref List<Rover> roverList, Rover rover, ref List<string> instructionList, string instructions)
+        public void AddInputToList(ReturnValue rv, InputType inputType, ref List<Rover> roverList, Rover rover, ref List<string> instructionList, Instruction instructions)
         {
             if (!rv.Value)
             {
@@ -34,7 +35,7 @@ namespace MarsRover
                 if (inputType == InputType.Rover)
                     roverList.Add(rover);
                 else if(inputType == InputType.Instruction)
-                    instructionList.Add(instructions);
+                    instructionList.Add(instructions.Value);
             }
         }
     }

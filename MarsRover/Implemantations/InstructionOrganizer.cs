@@ -1,4 +1,5 @@
 ﻿using MarsRover.Interfaces;
+using MarsRover.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,10 +15,10 @@ namespace MarsRover.Implemantations
         {
             rv = new ReturnValue();
         }
-        public ReturnValue CheckInstructions(string instructions)
+        public ReturnValue CheckInstructions(Instruction instructions)
         {
             rv.Value = true;
-            var array = instructions.ToCharArray();
+            var array = instructions.Value.ToCharArray();
             foreach (var item in array)
             {
                 if (!instructionList.Contains(item))
